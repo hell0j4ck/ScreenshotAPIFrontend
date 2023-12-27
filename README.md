@@ -57,3 +57,75 @@ However, since most serverless application deployment platforms like Render, Fly
 
 
 
+<h1>LINUX Instructions</h1>
+
+<p>You may run into issues deploying on a linux machine, and the documentation to solve those issues are below</p>
+
+<h2>Error: UnhandledPromiseRejectionWarning: Error: Failed to launch the browser process! error while loading shared libraries: libnss3.so: cannot open shared object file: No such file or directory. </h2>
+
+<h3>Solution</h3>
+
+<p>This mostly but not all the time is caused by missing dependencies that are required in the latest version. The good thing is you can easily check the missing chrome dependencies causing the crash.</p><br>
+
+
+<p>Make sure you are in the root folder of your project<br>
+
+-Navigate to node_modules folder<br>
+-Navigate to .cache/puppeteer/chrome/linux-some number/chrome-linux<br>
+-replace the linux-some number with whatever ls will output<br>
+-ls at /.local-chromium to check name of your directory<br>
+-At the last directory [ chrome-linux ] run below command to check the missing dependencies<br></p>
+
+<h4>ldd chrome | grep not</h4><br>
+
+<p>If you see any missing dependencies, run this command to install everything and restart your application.</p><br>
+
+
+<h4>sudo apt-get install ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils</h4><br>
+
+
+
+<b><p>NOTE: You will need to run this using a local user and NOT ROOT because there's a bug with the --no-sandbox error whenever root is used to run the app.<p></b><br>
+
+
+<h3>Create a new local user while you are logged in as root by running the following command:</h3><br>
+
+<h4>adduser [username]</h4><br>
+
+<h3>Then proceed to enter the password for the user. If you are not asked the password, then execute the command:</h4><br>
+
+<h4>passwd [username]</h4><br>
+
+
+<h3>Next, add the newly created user to the list of sudoers by executing the following command:</h3><br>
+
+<h4>usermod -aG sudo [username]</h4><br>
+
+
+<h3>Next, switch over to the user's localhost by executing the following command:</h3><br>
+
+<h4>su -l [username]</h4><br>
+
+
+<b><p>Now it is important to change the ownership of the ScreenshotAPI folder, especially the ScreenshotAPI/screenshots and ScreenshotAPI/pdfs folder because we will get an EACCESS denied error when a request for a screenshot or pdf is sent.</p></b><br>
+
+<h3>First run the command:</h3><br>
+
+<h4>sudo npm install -g --unsafe-perm=true --allow-root</h4><br>
+
+
+<h3>Then run the following commands:</h3><br>
+
+<h4>sudo chwon -R [username] /ScreenshotAPI</h4><br>
+<h4>sudo chwon -R [username] /ScreenshotAPI/screenshots</h4><br>
+<h4>sudo chwon -R [username] /ScreenshotAPI/pdfs</h4><br>
+
+
+
+
+<b><p>NOTE: If you still get any errors related to --no-sandbox, change the browser instance in the const browser in index.js to the following:</p></b><br>
+
+<h4>const browser = await puppeteer.launch({headless:"new", args: ['--no-sandbox', '--disable-setuid-sandbox'],});</h4><br>
+
+<p>This basically adds the --no-sandbox argument to puppetteer. </p>
+
