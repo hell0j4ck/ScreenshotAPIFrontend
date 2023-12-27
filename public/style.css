@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Rubik+Doodle+Shadow&display=swap');
+
+
 
 *{
 
@@ -8,7 +11,7 @@
 
 body{
 
-    background-color: #f0ebd8;
+    background-color: #dadcff;
 
 }
 
@@ -22,11 +25,13 @@ body{
 
 #home-title{
 
+
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Ubuntu',sans-serif;
+    font-family: 'Roboto',sans-serif;
+    font-size: 70px;
     text-align: center;
     margin: 1em 0 2em 0;
     
@@ -39,7 +44,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Ubuntu',sans-serif;
+    font-family: 'Roboto',sans-serif;
     text-align: center;
     margin: 1em 0 2em 0;
 }
@@ -50,8 +55,22 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Ubuntu',sans-serif;
+    font-family: 'Roboto',sans-serif;
     text-align: center;
+    margin: 1em 0 2em 0;
+
+
+}
+
+#note{
+
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto',sans-serif;
+    text-align: center;
+    font-weight: 900;
     margin: 1em 0 2em 0;
 
 
@@ -63,7 +82,7 @@ h2{
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Ubuntu',sans-serif;
+    font-family: 'Roboto',sans-serif;
     text-align: center;
 
 }
@@ -217,3 +236,17 @@ form button:hover{
 }
 
 
+footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 30em 0 0 0;
+    
+}
+
+footer p{
+
+    font-family: 'Roboto';
+    font-size: 12px;
+}

@@ -25,7 +25,7 @@ app.listen(port = '3001', () => {
 app.get('/', (req, res) => {
 
 
-   res.render("home.ejs")
+   res.render("home.ejs",{developer:'Jack Lee Jabra',license:'Opensource'})
 
 })
 
@@ -238,3 +238,105 @@ app.get('/fetchPdf', (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Developer: Jack Lee Jabra
+// License: OpenSource
