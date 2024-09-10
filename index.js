@@ -241,7 +241,7 @@ app.get('/screenshot', async (req, res) => {
 
         // Goes to URL and establishes page
         console.log("Navigating to page...")
-        await page.goto(url, { waitUntil: 'networkidle0' });
+        await page.goto(url, { waitUntil: 'networkidle2' });
 
 
         // THIS SCROLLS TO THE VERY BOTTOM OF THE PAGE
