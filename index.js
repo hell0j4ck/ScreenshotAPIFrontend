@@ -6,7 +6,8 @@ const puppeteer = require('puppeteer-extra')
 const pluginStealth = require('puppeteer-extra-plugin-stealth')
 const { executablePath } = require('puppeteer');
 const { v4: uuid } = require('uuid');
-const fs = require('fs')
+const fs = require('fs');
+const { timeout } = require('puppeteer');
 
 
 app.use(express.json())
@@ -73,7 +74,7 @@ app.get('/pdf', async (req, res) => {
     puppeteer.use(pluginStealth())
 
     // Creates browser instance 
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({ headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'] });
 
     // Creates page instance
     const page = await browser.newPage();
@@ -85,20 +86,73 @@ app.get('/pdf', async (req, res) => {
     try {
 
         // Goes to URL and establishes page
-        await page.goto(url, { waitUntil: 'networkidle0' });
+        console.log("Navigating to page...")
+        const request = await page.goto(url, { waitUntil: 'networkidle2'});
+      
+        // THIS SCROLLS TO THE VERY BOTTOM OF THE PAGE
+        let prevHeight = -1;
+        let maxScrolls = 100;
+        let scrollCount = 0;
 
-        await page.waitForNavigation({
-            waitUntil: 'networkidle0',
-        });
+        while (scrollCount < maxScrolls) {
+            // Scroll to the bottom of the page
+            await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
+            // Wait for page load
+            await page.waitForTimeout(1000);
+            // Calculate new scroll height and compare
+            let newHeight = await page.evaluate('document.body.scrollHeight');
+            if (newHeight == prevHeight) {
+                break;
+            }
+            prevHeight = newHeight;
+            scrollCount += 1;
+        }
 
-        await page.waitForSelector('section', { timeout: 5_000 });
-        await page.waitForSelector('div', { timeout: 5_000 });
-        await page.waitForSelector('p', { timeout: 5_000 });
-        await page.waitForSelector('a', { timeout: 5_000 });
+        const divSelectors = await page.evaluate(() => Array.from(document.querySelectorAll('div'), element => element.textContent));
+        const imgSelectors = await page.evaluate(() => Array.from(document.querySelectorAll('img'), element => element.textContent));
+        const videoSelectors = await page.evaluate(() => Array.from(document.querySelectorAll('video'), element => element.textContent));
+        const iframeSelectors = await page.evaluate(() => Array.from(document.querySelectorAll('iframe'), element => element.textContent));
+        const pSelectors = await page.evaluate(() => Array.from(document.querySelectorAll('p'), element => element.textContent));
+        const scriptSelectors = await page.evaluate(() => Array.from(document.querySelectorAll('script'), element => element.textContent));
+
+
+
+        console.log("Waiting For Elements...")
+        await page.waitForSelector('body');
+
+        if (divSelectors.length > 0) {
+            await page.waitForSelector('div', { timeout: 5_000 });
+            console.log("Divs Loaded...")
+        }
+        if (imgSelectors.length > 0) {
+            await page.waitForSelector('img', { timeout: 5_000 });
+            console.log("Images Loaded...")
+        }
+        if (videoSelectors.length > 0) {
+            await page.waitForSelector('video', { timeout: 5_000 });
+            console.log("Videos Loaded...")
+        }
+        if (iframeSelectors.length > 0) {
+            await page.waitForSelector('iframe', { timeout: 5_000 });
+            console.log("Iframes Loaded...")
+        }
+        if (pSelectors.length > 0) {
+            await page.waitForSelector('p', { timeout: 5_000 });
+            console.log("P's Loaded...")
+        }
+        if (scriptSelectors.length > 0) {
+            await page.waitForSelector('script', { timeout: 5_000 });
+            console.log("Scripts Loaded...")
+        }
 
 
 
 
+
+        // await page.waitForSelector('p', { timeout: 5_000 });
+        // await page.waitForSelector('a', { timeout: 5_000 });
+
+        console.log("Finished Waiting For Page Load.")
         await page.emulateMediaType('screen');
 
 
